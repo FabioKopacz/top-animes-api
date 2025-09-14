@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment: production 
+    
     permissions:
       id-token: write # Required for OIDC
       contents: read

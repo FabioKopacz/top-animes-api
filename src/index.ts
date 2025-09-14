@@ -1,9 +1,5 @@
-const BASE_URL = `https://kitsu.io/api/edge`;
-
-type Pagination = {
-  limit: number;
-  offset: number;
-};
+import { BASE_URL } from "./constants/constants";
+import { Pagination } from "./types/pagination";
 
 interface IAnimeClient {
   getBestRanking(data: Pagination): Promise<any>; // top animes
@@ -12,6 +8,7 @@ interface IAnimeClient {
   getWorstRanking(): Promise<any>; // bottom animes
 }
 
+// https://kitsu.docs.apiary.io/#introduction/questions?
 export class AnimeClient implements IAnimeClient {
   private validateLimitOffset(data: Pagination) {
     if (data.limit < 1 || data.limit > 100) {

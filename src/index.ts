@@ -3,21 +3,29 @@ import { Pagination } from "./types/pagination";
 
 interface IAnimeClient {
   getBestRanking(data: Pagination): Promise<any>; // top animes
-  getByCategory(): Promise<any>; // with pagination
+  getByGenre(data: Pagination): Promise<any>; // with pagination
   getDetails(id: number): Promise<any>; // will need id from other get
-  getWorstRanking(): Promise<any>; // bottom animes
+  getWorstRanking(data: Pagination): Promise<any>; // bottom animes
 }
 
-// https://kitsu.docs.apiary.io/#introduction/questions?
 export class AnimeClient implements IAnimeClient {
-  private validateLimitOffset(data: Pagination) {
-    if (data.limit < 1 || data.limit > 100) {
-      throw new Error("Limit must be between 1 and 20");
-    }
+  private async getGenres() {
+    try {
+      const response = await fetch(`${BASE_URL}/genres/anime`, {
+        method: "GET",
+      });
 
-    return `page[limit]=${data.limit}&page[offset]=${data.offset}`;
+      const res = await response.json();
+
+      console.log(`genres`, res.data);
+
+      return res.data;
+    } catch (err) {
+      this._handleError(err);
+    }
   }
 
+  /*
   public async getBestRanking(data: Pagination) {
     const validatedParams = this.validateLimitOffset(data);
     const urlParams = new URLSearchParams(validatedParams).toString();
@@ -33,13 +41,78 @@ export class AnimeClient implements IAnimeClient {
     } catch (err) {
       this._handleError(err);
     }
+  }*/
+
+  public async getBestRanking(data: Pagination): Promise<any> {
+    const { page = 1, limit = 25 } = data;
+
+    if (page < 1) {
+      throw new Error("Page must be greater than 0");
+    }
+
+    const urlParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    try {
+      const response = await fetch(`${BASE_URL}/top/anime?${urlParams}`, {
+        method: "GET",
+      });
+
+      const res = await response.json();
+
+      return res.data;
+    } catch (err) {
+      this._handleError(err);
+    }
   }
 
-  public async getByCategory() {}
+  public async getByGenre(pagination: Pagination): Promise<any> {
+    await this.getGenres();
+
+    const { page, limit } = pagination;
+    const response = await fetch(
+      `https://api.jikan.moe/v4/anime?page=${page}&limit=${limit}`
+    );
+    const json = await response.json();
+    return json;
+  }
 
   public async getDetails() {}
 
-  public async getWorstRanking() {}
+  public async getWorstRanking(data: Pagination) {
+    const { page = 1, limit = 25 } = data;
+
+    /* if (limit < 1 || limit > 25) {
+      throw new Error("Limit must be between 1 and 25");
+    }*/
+
+    if (page < 1) {
+      throw new Error("Page must be greater than 0");
+    }
+
+    const urlParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      sort: "desc",
+    });
+    /*  
+      order_by: "score",
+      sort: "desc",
+      */
+    try {
+      const response = await fetch(`${BASE_URL}/top/anime?${urlParams}`, {
+        method: "GET",
+      });
+
+      const res = await response.json();
+
+      return res.data;
+    } catch (err) {
+      this._handleError(err);
+    }
+  }
 
   _handleError(err: any) {
     console.log(err);

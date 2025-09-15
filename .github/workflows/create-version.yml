@@ -26,7 +26,7 @@ jobs:
         run: |
           npm version patch --no-git-tag-version --message "Release: v%s"
 
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Send version to repository

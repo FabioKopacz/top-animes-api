@@ -4,9 +4,8 @@
 name: Publish NPM Package
 
 on:
-  workflow_run:
-    workflows: ["Create Release"]
-    types: [completed]
+  release:
+    types: [created]
 
 jobs:
   build:

@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment: production 
+    
     permissions:
       id-token: write # Required for OIDC
       contents: read
@@ -21,6 +22,7 @@ jobs:
         with:
           node-version: 20
           registry-url: "https://registry.npmjs.org/"
+          # always-auth: true
 
       - name: Set package.json version from GitHub release
         run: npm version $GITHUB_REF_NAME --no-git-tag-version

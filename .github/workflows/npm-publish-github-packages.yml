@@ -27,5 +27,7 @@ jobs:
 
       - run: npm ci
       # - run: npm test  executa os testes
-      - run: npm run build # constrói o projeto, se aplicável
+      - run: npm run build
       - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

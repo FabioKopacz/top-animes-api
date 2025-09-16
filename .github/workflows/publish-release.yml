@@ -25,7 +25,8 @@ jobs:
           # always-auth: true
 
       - name: Get version from tag
-        run: npm version $GITHUB_REF_NAME --no-git-tag-version
+        run: echo "GITHUB_REF_NAME"
+      - run: npm version $GITHUB_REF_NAME --no-git-tag-version
 
       - run: npm ci
       # - run: npm test  executa os testes

@@ -35,3 +35,6 @@ jobs:
           git add package.json
           git commit -m "Release: v${{ steps.version.outputs.CURRENT_VERSION }}"
           git push
+
+      - name: Push tags to git
+        run: git push --follow-tags

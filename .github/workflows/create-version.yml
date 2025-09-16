@@ -36,5 +36,7 @@ jobs:
           git commit -m "Release: v${{ steps.version.outputs.CURRENT_VERSION }}"
           git push
 
-      - name: Push tags to git
-        run: git push --follow-tags
+      - name: Create git tag
+        run: git tag v${{ steps.version.outputs.CURRENT_VERSION }}
+      - name: Push git tag
+        run: git push origin v${{ steps.version.outputs.CURRENT_VERSION }}

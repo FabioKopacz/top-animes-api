@@ -24,10 +24,6 @@ jobs:
           registry-url: "https://registry.npmjs.org/"
           # always-auth: true
 
-      - name: Get version from tag
-        run: echo $GITHUB_REF_NAME
-      - run: npm version $GITHUB_REF_NAME --no-git-tag-version
-
       - run: npm ci
       # - run: npm test  executa os testes
       - run: npm run build
